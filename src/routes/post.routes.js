@@ -23,7 +23,6 @@ postRouter.post("/", upload.single("img"), async (req, res) => {
       return res.status(400).json({ message: "Image file is required" });
     }
 
-    // console.log(decoded)
     const result = await client.files.upload({
       file: await toFile(req.file.buffer, req.file.originalname),
       fileName: req.file.originalname,
