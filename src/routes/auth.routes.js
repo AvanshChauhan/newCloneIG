@@ -1,31 +1,52 @@
 const express = require("express");
 const userModel = require("../models/userModel");
-
-const router = express.Router();
-
-router.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Auth routes are ready",
-    routes: {
-      register: "POST /api/auth/register",
-    },
-  });
-});
-
-router.post("/register", async (req, res, next) => {
+const authRouter = express.Router();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+authRouter.post("/register", async (req, res, next) => {
   try {
-    const { username, email, password, bio, pfp } = req.body;
+    const { email, username, password, bio, pfp } = req.body;
 
+    if (!email || !username || !password) {
+      return res.status(400).json({
+        message: "username, email and password are required",
+      });
+    }
+
+    const isUserExist = await userModel.findOne({
+      $or: [{ username }, { email }],
+    });
+
+    if (isUserExist) {
+      return res.status(409).json({
+        message:
+          isUserExist.email === email
+            ? "email already exists"
+            : "username already taken",
+      });
+    }
+
+    const hashPass = await bcrypt.hash(password, 10);
     const user = await userModel.create({
       username,
       email,
-      password,
+      password: hashPass,
       bio,
       pfp,
     });
 
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "4d" },
+    );
+
+    res.cookie("token", token);
+
     res.status(201).json({
-      message: "User registered successfully",
+      message: "user created",
       user: {
         id: user._id,
         username: user.username,
@@ -35,13 +56,52 @@ router.post("/register", async (req, res, next) => {
       },
     });
   } catch (error) {
-    if (error.code === 11000) {
-      error.statusCode = 409;
-      error.message = "Username or email already exists";
-    }
-
     next(error);
   }
 });
+authRouter.post("/login", async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
 
-module.exports = router;
+    if ((!username && !email) || !password) {
+      return res.status(400).json({
+        message: "username or email and password are required",
+      });
+    }
+
+    const user = await userModel.findOne({
+      $or: [{ username }, { email }],
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "user does not exist",
+      });
+    }
+
+    const isPassValid = await bcrypt.compare(password, user.password);
+
+    if (!isPassValid) {
+      return res.status(401).json({
+        message: "password is not valid",
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "4d" }
+    );
+
+    res.cookie("token", token);
+
+    res.status(200).json({
+      message: "user logged in",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+module.exports = authRouter;
