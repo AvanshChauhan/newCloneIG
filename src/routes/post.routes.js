@@ -3,8 +3,8 @@ const { toFile } = require("@imagekit/nodejs");
 const express = require("express");
 const multer = require("multer");
 const postRouter = express.Router();
-const jwt = require("jsonwebtoken");
 const postModel = require("../models/post.model");
+const { checkUser } = require("../middlewares/auth.middleware");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -14,16 +14,11 @@ const client = new ImageKit({
 });
 
 // POST /api/post
-// Ye API naya post create karti hai. Pehle cookie se JWT token leti hai aur check karti hai
-// ki user logged-in hai ya nahi. Agar image file nahi mili to 400 response return hota hai.
-// Image ko memory se ImageKit par upload kiya jata hai, token verify karke user id nikali jati hai,
-// phir caption, image URL aur user id ke saath database me post save hota hai.
-postRouter.post("/", upload.single("img"), async (req, res) => {
+// Ye API naya post create karti hai. checkUser middleware pehle user verify karta hai.
+// Agar image file nahi mili to 400 response return hota hai. Image ko memory se ImageKit par
+// upload karke caption, image URL aur user id ke saath database me post save hota hai.
+postRouter.post("/", checkUser, upload.single("img"), async (req, res) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "unauthorized access" });
-    }
     if (!req.file) {
       return res.status(400).json({ message: "Image file is required" });
     }
@@ -34,18 +29,10 @@ postRouter.post("/", upload.single("img"), async (req, res) => {
       fileName: req.file.originalname,
       folder: "/posts",
     });
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      return res.status(401).json({
-        message: "unauthorized access",
-      });
-    }
     const post = await postModel.create({
       caption: req.body.caption,
       imageUrl: result.url,
-      user: decoded.id,
+      user: req.user.id,
     });
     res.status(201).json({
       message: "post created successfully",
@@ -56,23 +43,10 @@ postRouter.post("/", upload.single("img"), async (req, res) => {
   }
 });
 // GET /api/post
-// Ye API logged-in user ke posts fetch karti hai. Cookie se token check hota hai,
-// token valid hone par decoded id se current user milta hai, aur database me us user ke
-// saare posts find kiye jate hain. End me success response send hota hai.
-postRouter.get("/",async (req,res)=>{
-  const token=req.cookies.token;
-  if(!token){
-    res.status(401).json({message:"unauthorized acccess"})
-  }
-  let decoded
-  try {
-    decoded=jwt.verify(token,process.env.JWT_SECRET)
-  } catch (error) {
-    res.status(401).json({
-      message:"token invalid"
-    })
-  }
-  const UserId=decoded.id
+// Ye API logged-in user ke posts fetch karti hai. checkUser se current user milta hai,
+// aur database me us user ke saare posts find kiye jate hain.
+postRouter.get("/",checkUser,async (req,res)=>{
+  const UserId=req.user.id
   const post=await postModel.find({
     user:UserId,
   })
@@ -81,26 +55,12 @@ postRouter.get("/",async (req,res)=>{
   })
 })
 // GET /api/post/details/:postId
-// Ye API kisi ek specific post ki details ke liye hai. Pehle user ka token verify hota hai,
+// Ye API kisi ek specific post ki details ke liye hai. checkUser pehle user verify karta hai,
 // phir URL params se postId liya jata hai aur database me post find hoti hai.
 // Agar post nahi milti to 404 return hota hai. Agar post kisi aur user ki hai to 403 return hota hai.
 // Sirf owner user ko hi successful response milta hai.
-postRouter.get("/details/:postId",async(req,res)=>{
-  const token=req.cookies.token;
-  if(!token){
-    return res.status(401).json({
-      message:"unauthorized access"
-    })
-  }
-  let decoded
-  try {
-    decoded=jwt.verify(token,process.env.JWT_SECRET)
-  } catch (error) {
-    res.status(401).json({
-      message:"invalid token"
-    })
-  }
-  const UserId=decoded.id
+postRouter.get("/details/:postId",checkUser,async(req,res)=>{
+  const UserId=req.user.id
   const postId=req.params.postId
   const post=await postModel.findById(postId)
   if(!post){
