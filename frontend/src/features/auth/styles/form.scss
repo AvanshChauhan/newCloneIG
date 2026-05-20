@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap');
+.background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("/assets/background/bg.jpg");
+  height: 100vh;
+  width: 100vw;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 380px;
+  padding: 45px 35px;
+
+  background: rgba(72, 8, 8, 0.55);
+  backdrop-filter: blur(8px);
+
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+}
+
+.login-form h1 {
+  font-family: "Cinzel", serif;
+  font-size: 2.3rem;
+  font-weight: 600;
+
+  color: #F5E6C8;
+
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 18px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 14px 18px;
+
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  background: rgba(255,255,255,0.06);
+
+  color: #F5E6C8;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+
+  outline: none;
+  transition: 0.3s ease;
+}
+
+.login-form input::placeholder {
+  color: #DDB892;
+}
+
+.login-form input:focus {
+  border-color: #D4A373;
+  box-shadow: 0 0 15px rgba(212,163,115,0.3);
+}
+
+.login-form button {
+  width: 100%;
+  padding: 14px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: #D4A373;
+  color: #2B0B0B;
+
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.login-form button:hover {
+  transform: translateY(-2px);
+  background: #ddb07f;
+}
+.login-form a{
+  color: #F5E6C8;
+  font-size: 10px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: 0.3s ease;
+  text-decoration: underline;
+}
+.login-form h5{
+  color: #877148;
+  font-size: 10px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+}
