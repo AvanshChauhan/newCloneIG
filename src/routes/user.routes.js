@@ -45,4 +45,37 @@ userRouter.post("/follows/:username", checkUser, async (req, res, next) => {
     next(error);
   }
 });
+userRouter.delete("/follows/:username", checkUser, async (req, res, next) => {
+  try {
+    // Yaha logged-in user follower hai, aur params wala username unfollow hone wala user hai.
+    const followerId = req.user.id;
+    const followingUsername = req.params.username;
+
+    const followingUser = await userModel.findOne({ username: followingUsername });
+
+    if (!followingUser) {
+      return res.status(404).json({ message: "user not found" });
+    }
+
+    if (followingUser._id.toString() === followerId) {
+      return res.status(400).json({ message: "you cannot unfollow yourself" });
+    }
+
+    // Follow relation milti hai to delete hoti hai, warna user already follow nahi kar raha.
+    const deletedFollow = await followModel.findOneAndDelete({
+      follower: followerId,
+      following: followingUser._id,
+    });
+
+    if (!deletedFollow) {
+      return res.status(404).json({ message: "you are not following this user" });
+    }
+
+    res.status(200).json({
+      message: `unfollowed ${followingUser.username}`,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = userRouter;
