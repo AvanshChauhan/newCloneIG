@@ -4,21 +4,24 @@
   justify-content: center;
   align-items: center;
   background-image: url("/assets/background/bg.jpg");
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  padding: 24px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
 
 .login-form {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  width: 380px;
-  padding: 45px 35px;
+  width: min(100%, 380px);
+  padding: clamp(32px, 7vw, 45px) clamp(22px, 6vw, 35px);
 
   background: rgba(72, 8, 8, 0.55);
   backdrop-filter: blur(8px);
@@ -31,7 +34,7 @@
 
 .login-form h1 {
   font-family: "Cinzel", serif;
-  font-size: 2.3rem;
+  font-size: clamp(2rem, 8vw, 2.3rem);
   font-weight: 600;
 
   color: #F5E6C8;
@@ -51,6 +54,7 @@
 }
 
 .login-form input {
+  box-sizing: border-box;
   width: 100%;
   padding: 14px 18px;
 
@@ -110,4 +114,36 @@
   font-size: 10px;
   font-family: "Poppins", sans-serif;
   outline: none;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .background {
+    align-items: flex-start;
+    padding: 72px 16px 24px;
+  }
+
+  .login-form {
+    border-radius: 20px;
+  }
+
+  .login-form form {
+    gap: 14px;
+  }
+
+  .login-form input,
+  .login-form button {
+    min-height: 48px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .background {
+    padding-inline: 12px;
+  }
+
+  .login-form input {
+    padding-inline: 14px;
+  }
 }
