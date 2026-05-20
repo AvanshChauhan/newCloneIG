@@ -16,11 +16,19 @@ const userSchema = new mongoose.Schema({
         required:[true,"password is required"]
     },
     bio:String,
-    // pfp ka matlab profile picture hai. Agar user image nahi bhejta to default pfp save hogi.
+    //profile picture =pfp
     pfp:{
         type:String,
         default:"https://ik.imagekit.io/jsutK/pfp.jpg?updatedAt=1777371784218"
-    }
+    },
+    followers:[{
+        type:String,
+        ref:"users"
+    }],
+    following:[{
+        type:String,
+        ref:"users"
+    }]
 })
 const userModel = mongoose.model("user", userSchema);
 
