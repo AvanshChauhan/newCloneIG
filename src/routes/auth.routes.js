@@ -3,6 +3,10 @@ const userModel = require("../models/userModel");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
+// POST /api/auth/register
+// Ye API new user create karti hai. Pehle required fields validate hote hain,
+// fir duplicate email/username check hota hai, password hash hota hai aur token cookie me set hota hai.
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { email, username, password, bio, pfp } = req.body;
@@ -59,6 +63,10 @@ authRouter.post("/register", async (req, res, next) => {
     next(error);
   }
 });
+
+// POST /api/auth/login
+// Ye API username ya email se user find karti hai, password compare karti hai,
+// aur login successful hone par JWT token cookie me save kar deti hai.
 authRouter.post("/login", async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
