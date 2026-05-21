@@ -14,10 +14,12 @@ export function AuthProvider({ children }) {
 
     try {
       const response = await login(usernameOrEmail, password);
-      setUser(response.user || response);
+
+      setUser(response.user);
+
       return response;
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.message || error.message);
       console.log(error);
       throw error;
     } finally {
@@ -31,10 +33,12 @@ export function AuthProvider({ children }) {
 
     try {
       const response = await register(username, email, password);
-      setUser(response.user || response);
+
+      setUser(response.user);
+
       return response;
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.message || error.message);
       console.log(error);
       throw error;
     } finally {
@@ -56,7 +60,7 @@ export function AuthProvider({ children }) {
         isAuthenticated: Boolean(user),
       },
     },
-    children,
+    children
   );
 }
 

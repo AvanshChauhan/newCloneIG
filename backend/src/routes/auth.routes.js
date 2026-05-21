@@ -101,6 +101,13 @@ authRouter.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "user logged in",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        bio: user.bio,
+        pfp: user.pfp,
+      },
     });
   } catch (error) {
     next(error);

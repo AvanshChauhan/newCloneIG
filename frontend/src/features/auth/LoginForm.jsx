@@ -1,20 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import "./styles/form.scss";
-import { useAuth } from "./auth.context";
-
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import "./styles/form.scss"
+import { useAuth } from './auth.context';
 const LoginForm = () => {
+  const { loading, handleLogin } = useAuth()
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setpassword] = useState("");
-  const { loginUser, loading, error } = useAuth();
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    try {
-      await loginUser(usernameOrEmail, password);
+     try {
+      await handleLogin(usernameOrEmail, password);
+      navigate("/");
     } catch (error) {
-      console.log(error.response?.data?.message || error.message);
+      console.log(error.message);
     }
   }
   return (
@@ -30,7 +30,6 @@ const LoginForm = () => {
               <input
               onChange={(e) => setpassword(e.target.value)}
               type="password" placeholder='Enter your password' />
-              {error && <p>{error}</p>}
               <button type="submit" disabled={loading}>
                 {loading ? "Logging in..." : "Login"}
               </button>
