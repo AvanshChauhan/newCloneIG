@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import LoginForm from "./features/auth/LoginForm";
 import RegisterForm from "./features/auth/RegisterForm";
 

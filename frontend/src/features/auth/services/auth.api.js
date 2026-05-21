@@ -16,9 +16,12 @@ export async function register(username, email, password) {
     );
 
     console.log(res.data);
+    return res.data;
   } catch (error) {
     // Backend validation error bheje to wahi message log hota hai, warna normal error message.
-    console.log(error.response?.data?.message || error.message);
+    const message = error.response?.data?.message || error.message;
+    console.log(message);
+    throw new Error(message, { cause: error });
   }
 }
 
@@ -40,8 +43,11 @@ export async function login(usernameOrEmail, password) {
     );
 
     console.log(res.data);
+    return res.data;
   } catch (error) {
     // Password galat ho ya user na mile, backend ka clear message console me aayega.
-    console.log(error.response?.data?.message || error.message);
+    const message = error.response?.data?.message || error.message;
+    console.log(message);
+    throw new Error(message, { cause: error });
   }
 }
