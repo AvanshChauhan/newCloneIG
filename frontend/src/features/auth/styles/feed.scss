@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap');
+
+.feed-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  min-height: 100svh;
+  width: 100%;
+  background: #1a0505;
+  padding: 24px;
+
+  .feed {
+    width: min(100%, 600px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .feed-header {
+      font-family: "Cinzel", serif;
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      font-weight: 600;
+      color: #F5E6C8;
+      letter-spacing: 2px;
+      text-align: center;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      padding: 16px 0;
+    }
+
+    .posts {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .post {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      background: rgba(72, 8, 8, 0.55);
+      backdrop-filter: blur(8px);
+
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+
+      padding: 16px;
+
+      .user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .circle {
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+          padding: 3px;
+
+          img {
+            width: 2.5rem;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+
+        p {
+          font-family: "Poppins", sans-serif;
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: #F5E6C8;
+        }
+      }
+
+      .post-image {
+        width: 100%;
+        border-radius: 12px;
+        object-fit: cover;
+      }
+
+      .icons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .left {
+          display: flex;
+          gap: 12px;
+        }
+        .like{
+          color: red;
+        }
+        svg {
+          width: 1.5rem;
+          aspect-ratio: 1/1;
+          color: #F5E6C8;
+          transition: 0.2s ease;
+        }
+
+        svg:hover {
+          color: #D4A373;
+        }
+
+        button {
+          background-color: transparent;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          padding: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      .bottom {
+        .caption {
+          font-family: "Poppins", sans-serif;
+          font-size: 0.9rem;
+          color: #DDB892;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+
+  .loading,
+  .error,
+  .empty {
+    font-family: "Cinzel", serif;
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    color: #F5E6C8;
+    text-align: center;
+    padding: 60px 20px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .error {
+    color: #e74c3c;
+  }
+}
+
+@media (max-width: 640px) {
+  .feed-page {
+    padding: 0 0 16px;
+
+    .feed {
+      gap: 12px;
+
+      .post {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .feed-page {
+    .feed {
+      .post {
+        .user {
+          p {
+            font-size: 0.85rem;
+          }
+          .circle img {
+            width: 2rem;
+          }
+        }
+
+        .icons svg {
+          width: 1.3rem;
+        }
+
+        .bottom .caption {
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}

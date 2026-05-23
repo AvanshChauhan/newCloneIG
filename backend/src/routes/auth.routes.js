@@ -3,6 +3,7 @@ const userModel = require("../models/userModel");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const identifyUser=require("../middlewares/auth.middleware")
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { email, username, password, bio, pfp } = req.body;
@@ -72,7 +73,7 @@ authRouter.post("/login", async (req, res, next) => {
 
     const user = await userModel.findOne({
       $or: [{ username }, { email }],
-    });
+    }).select("+password");
 
     if (!user) {
       return res.status(404).json({
@@ -101,16 +102,21 @@ authRouter.post("/login", async (req, res, next) => {
 
     res.status(200).json({
       message: "user logged in",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        bio: user.bio,
-        pfp: user.pfp,
-      },
     });
   } catch (error) {
     next(error);
   }
 });
+authRouter.get("/get-me",identifyUser,async(req,res,next)=>{
+  const userId=req.user.id
+  const user = await userModel.findOne(userId)
+  res.status(200).json({  
+    user:{
+      username:user.username,
+      email:user.email,
+      bio:user.bio,
+      pfp:user.pfp
+    }
+  })
+})
 module.exports = authRouter;
