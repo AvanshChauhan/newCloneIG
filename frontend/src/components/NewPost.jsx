@@ -12,7 +12,7 @@ const NewPost = ({user,post}) => {
       </div>
       <img
         className="post-image"
-        src={post.img}
+        src={post.imageUrl}
         alt=""
       />
       <div className="icons">

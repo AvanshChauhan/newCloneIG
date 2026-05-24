@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import "../auth/styles/form.scss"
+import "../auth/styles/feed.scss"
 import{usePost} from '../hook/usePost'
 import { useNavigate } from "react-router-dom";
 const CreatePost = () => {
@@ -14,11 +15,11 @@ const CreatePost = () => {
     navigate('/')
   }
   if(loading){
-    return <main>
-      <h1>
-        Creating post
-      </h1>
-    </main>
+    return (
+      <main className="feed-page">
+        <h1 className="loading">Creating post...</h1>
+      </main>
+    );
   }
   return (
     <main className="background">
