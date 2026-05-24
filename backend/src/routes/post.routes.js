@@ -123,13 +123,40 @@ postRouter.post("/like/:postid", checkUser, async (req, res, next) => {
     next(err);
   }
 });
+
+// @description : unlike a post
+// @route DELETE /api/posts/unlike/:postid
+// Ye API logged-in user se post unlike karwati hai.
+postRouter.delete("/unlike/:postid", checkUser, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const postId = req.params.postid;
+
+    const deletedLike = await likeModel.findOneAndDelete({
+      post: postId,
+      user: userId
+    });
+
+    if (!deletedLike) {
+      return res.status(404).json({
+        message: "like not found"
+      });
+    }
+
+    return res.status(200).json({
+      message: "post unliked successfully"
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 //  @route POST /api/posts/feed/
 //GET all the post created in the DB and access should be pvt
 postRouter.get("/feed",checkUser,async(req,res,next)=>{
   const user=req.user
 
   const posts=await Promise.all(
-    (await postModel.find().populate("user").lean()).map(async(post)=>{
+    (await postModel.find({}).sort({_id:-1}).populate("user").lean()).map(async(post)=>{
       const isLiked=await likeModel.findOne({
   user:user.id,
   post:post._id

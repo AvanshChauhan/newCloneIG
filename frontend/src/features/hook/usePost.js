@@ -1,4 +1,4 @@
-import { getFeed ,createPost} from "../services/post.api";
+import { getFeed ,createPost, likePost, unlikePost} from "../services/post.api";
 import { useContext, useCallback } from "react";
 import {PostContext} from "../post/PostContext"
 /**
@@ -42,5 +42,39 @@ export const usePost=()=>{
         }
     }, [setLoading, setError, setFeed])
 
-    return {loading,feed,post,error,handleGetFeed,handleCreatePost}
+    // Memoized function to handle post liking.
+    const handleLikePost = useCallback(async (postId) => {
+        try {
+            // Optimistic update
+            setFeed(prevFeed => prevFeed.map(p => 
+                p._id === postId ? { ...p, isLiked: true } : p
+            ))
+            await likePost(postId)
+        } catch (error) {
+            // Revert on error
+            setFeed(prevFeed => prevFeed.map(p => 
+                p._id === postId ? { ...p, isLiked: false } : p
+            ))
+            console.log(error)
+        }
+    }, [setFeed])
+
+    // Memoized function to handle post unliking.
+    const handleUnlikePost = useCallback(async (postId) => {
+        try {
+            // Optimistic update
+            setFeed(prevFeed => prevFeed.map(p => 
+                p._id === postId ? { ...p, isLiked: false } : p
+            ))
+            await unlikePost(postId)
+        } catch (error) {
+            // Revert on error
+            setFeed(prevFeed => prevFeed.map(p => 
+                p._id === postId ? { ...p, isLiked: true } : p
+            ))
+            console.log(error)
+        }
+    }, [setFeed])
+
+    return {loading,feed,post,error,handleGetFeed,handleCreatePost, handleLikePost, handleUnlikePost}
 }
