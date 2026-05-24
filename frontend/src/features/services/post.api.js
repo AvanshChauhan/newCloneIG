@@ -8,3 +8,15 @@ export async function getFeed(){
     const response=await api.get('/api/posts/feed')
     return response.data
 }
+
+export async function createPost(image, caption) {
+    const formData = new FormData()
+    formData.append("img", image)
+    formData.append("caption", caption)
+    const response = await api.post('/api/posts', formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })
+    return response.data
+}

@@ -7,7 +7,7 @@ const Feed = () => {
   const {feed,handleGetFeed,loading,error}=usePost()
   useEffect(()=>{
     handleGetFeed()
-  },[])
+  },[handleGetFeed])
   if(loading){
     return (
       <main className='feed-page'>

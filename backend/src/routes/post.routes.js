@@ -131,7 +131,7 @@ postRouter.get("/feed",checkUser,async(req,res,next)=>{
   const posts=await Promise.all(
     (await postModel.find().populate("user").lean()).map(async(post)=>{
       const isLiked=await likeModel.findOne({
-  user:user._id,
+  user:user.id,
   post:post._id
 })
 

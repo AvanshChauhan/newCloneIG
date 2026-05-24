@@ -3,7 +3,7 @@ const userModel = require("../models/userModel");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const identifyUser=require("../middlewares/auth.middleware")
+const { checkUser: identifyUser } = require("../middlewares/auth.middleware");
 authRouter.post("/register", async (req, res, next) => {
   try {
     const { email, username, password, bio, pfp } = req.body;
@@ -107,16 +107,29 @@ authRouter.post("/login", async (req, res, next) => {
     next(error);
   }
 });
+// GET /api/auth/get-me
+// This route returns the current logged-in user's details.
+// It uses the identifyUser (checkUser) middleware to verify the JWT token.
 authRouter.get("/get-me",identifyUser,async(req,res,next)=>{
-  const userId=req.user.id
-  const user = await userModel.findOne(userId)
-  res.status(200).json({  
-    user:{
-      username:user.username,
-      email:user.email,
-      bio:user.bio,
-      pfp:user.pfp
+  try {
+    // The user ID is extracted from the decoded token attached to req.user by the middleware.
+    const userId=req.user.id
+    const user = await userModel.findById(userId)
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  })
+    
+    res.status(200).json({  
+      user:{
+        username:user.username,
+        email:user.email,
+        bio:user.bio,
+        pfp:user.pfp
+      }
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 module.exports = authRouter;
