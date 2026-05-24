@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import  "../auth/styles/feed.scss"
 import NewPost from '../../components/NewPost'
 import { usePost } from '../hook/usePost'
+import Nav from '../../components/Nav'
 const Feed = () => {
   const {feed,handleGetFeed,loading,error}=usePost()
   useEffect(()=>{
@@ -30,8 +31,9 @@ const Feed = () => {
   }
   return (
     <main className='feed-page'>
+      <Nav/>
         <div className="feed">
-            <h2 className="feed-header">Feed</h2>
+            <h2 className="feed-header"></h2>
             <div className="posts">
             {feed.map(post=>{
               return <NewPost key={post._id || post.id} user={post.user} post={post}/>

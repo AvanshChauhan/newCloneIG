@@ -3,29 +3,29 @@
 .feed-page {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   min-height: 100vh;
   min-height: 100svh;
   width: 100%;
   background: #1a0505;
   padding: 24px;
-
+  flex-direction:column;
   .feed {
     width: min(100%, 600px);
     display: flex;
     flex-direction: column;
     gap: 20px;
 
-    .feed-header {
-      font-family: "Cinzel", serif;
-      font-size: clamp(1.5rem, 6vw, 2rem);
-      font-weight: 600;
-      color: #F5E6C8;
-      letter-spacing: 2px;
-      text-align: center;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-      padding: 16px 0;
-    }
+    // .feed-header {
+    //   font-family: "Cinzel", serif;
+    //   font-size: clamp(1.5rem, 6vw, 2rem);
+    //   font-weight: 600;
+    //   color: #F5E6C8;
+    //   letter-spacing: 2px;
+    //   text-align: center;
+    //   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    //   padding: 16px 0;
+    // }
 
     .posts {
       width: 100%;

@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap');
+
+.nav-bar {
+//   position: sticky;
+//   top: 0;
+//   z-index: 100;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  margin-bottom: 8px;
+//   background: rgba(72, 8, 8, 0.6);
+.nav-logo {
+  display: flex;
+  align-items: center;
+  img {
+    height: 70px;
+    width: auto;
+  }
+}
+  .nav-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    padding: 8px;
+
+    svg {
+      width: 1.3rem;
+      aspect-ratio: 1/1;
+      color: #F5E6C8;
+      transition: 0.2s ease;
+    }
+
+    &:hover {
+      background: rgba(212, 163, 115, 0.15);
+      border-color: rgba(212, 163, 115, 0.3);
+
+      svg {
+        color: #D4A373;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-bar {
+    padding: 10px 16px;
+
+    .button {
+      width: 36px;
+      height: 36px;
+
+      svg {
+        width: 1.1rem;
+      }
+    }
+  }
+}
