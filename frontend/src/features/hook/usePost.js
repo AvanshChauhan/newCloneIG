@@ -1,4 +1,4 @@
-import { getFeed, createPost } from "../services/post.api";
+import { getFeed ,createPost} from "../services/post.api";
 import { useContext, useCallback } from "react";
 import {PostContext} from "../post/PostContext"
 /**
@@ -10,7 +10,6 @@ export const usePost=()=>{
     const {loading,setLoading,post,feed,setFeed,error,setError}=context
 
     // Memoized function to fetch the user's feed.
-    // Wrapped in useCallback to prevent unnecessary re-renders in components using it.
     const handleGetFeed=useCallback(async()=>{
         try {
             setLoading(true)
@@ -25,20 +24,23 @@ export const usePost=()=>{
         }
     }, [setLoading, setError, setFeed])
 
-    // Memoized function to handle post creation.
-    // Takes an image file and a caption as arguments.
-    const handleCreatePost=useCallback(async(image, caption)=>{
+    // Memoized function to handle post creation and update local feed.
+    const handleCreatePost=useCallback(async(imageFile, caption)=>{
         try {
             setLoading(true)
             setError(null)
-            await createPost(image, caption)
+            const data = await createPost(imageFile, caption)
+            // Add the new post to the beginning of the feed
+            if (data.post) {
+                setFeed(prevFeed => prevFeed ? [data.post, ...prevFeed] : [data.post])
+            }
         } catch (error) {
             setError(error.response?.data?.message || error.message || "Failed to create post")
             console.log(error)
         } finally {
             setLoading(false)
         }
-    }, [setLoading, setError])
+    }, [setLoading, setError, setFeed])
 
     return {loading,feed,post,error,handleGetFeed,handleCreatePost}
 }
